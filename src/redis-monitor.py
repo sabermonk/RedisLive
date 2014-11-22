@@ -246,15 +246,17 @@ class RedisMonitor(object):
         """
         redis_servers = settings.get_redis_servers()
 
+
         for redis_server in redis_servers:
-            monitor = MonitorThread(redis_server["server"], redis_server["port"],
-                                   redis_server.get("password", None))
+
+            redis_password = redis_server.get("password")
+
+            monitor = MonitorThread(redis_server["server"], redis_server["port"], redis_password)
             self.threads.append(monitor)
             monitor.setDaemon(True)
             monitor.start()
 
-            info = InfoThread(redis_server["server"], redis_server["port"],
-                              redis_server.get("password", None))
+            info = InfoThread(redis_server["server"], redis_server["port"], redis_password)
             self.threads.append(info)
             info.setDaemon(True)
             info.start()
